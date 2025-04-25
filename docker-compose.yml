@@ -1,0 +1,64 @@
+
+services:
+
+  mysql-my-music:
+    image: mysql:8.0.41-debian
+    container_name: mysql-my-music
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: mymusic
+    volumes:
+      - my_music_data:/var/lib/mysql
+      - ./initdb.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '3308:3306'
+    networks:
+      - my-music_backend
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456" ]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis-my-music
+    hostname: redis-my-music
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - REDIS_PASSWORD=123456
+      - REDIS_DISABLE_COMMANDS=FLUSHDB;FLUSHALL
+    command: redis-server --requirepass 123456
+    networks:
+      - my-music_backend
+
+
+  spring-my-music:
+    container_name: spring-my-music
+    image: lean2708/spring-my-music:0.0.1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - '8080:8080'
+    networks:
+      - my-music_backend
+    depends_on:
+      mysql-devjob:
+        condition: service_healthy
+
+networks:
+  my-music_backend:
+    driver: bridge
+
+volumes:
+  adam_store_data:
+    driver: local
