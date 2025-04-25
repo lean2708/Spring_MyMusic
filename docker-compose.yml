@@ -10,7 +10,6 @@ services:
       MYSQL_DATABASE: mymusic
     volumes:
       - my_music_data:/var/lib/mysql
-      - ./initdb.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - '3308:3306'
     networks:
@@ -21,22 +20,6 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
-
-
-  redis:
-    image: redis:6.2-alpine
-    container_name: redis-my-music
-    hostname: redis-my-music
-    restart: unless-stopped
-    ports:
-      - '6379:6379'
-    environment:
-      - ALLOW_EMPTY_PASSWORD=no
-      - REDIS_PASSWORD=123456
-      - REDIS_DISABLE_COMMANDS=FLUSHDB;FLUSHALL
-    command: redis-server --requirepass 123456
-    networks:
-      - my-music_backend
 
 
   spring-my-music:
@@ -52,7 +35,7 @@ services:
     networks:
       - my-music_backend
     depends_on:
-      mysql-devjob:
+      mysql-my-music:
         condition: service_healthy
 
 networks:
@@ -60,5 +43,5 @@ networks:
     driver: bridge
 
 volumes:
-  adam_store_data:
+  my_music_data:
     driver: local
