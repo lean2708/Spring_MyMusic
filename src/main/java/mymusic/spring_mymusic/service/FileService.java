@@ -27,7 +27,23 @@ public class FileService {
     private final FileRepository fileRepository;
 
     private static final List<String> IMAGE_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif", "image/webp");
-    private static final List<String> VIDEO_TYPES = Arrays.asList("video/mp4", "video/avi", "video/mov", "video/mkv");
+    private static final List<String> VIDEO_TYPES = Arrays.asList(
+            // Video types
+            "video/mp4",
+            "video/avi",
+            "video/mov",
+            "video/mkv",
+
+            // Audio types
+            "audio/mpeg",   // .mp3
+            "audio/wav",    // .wav
+            "audio/x-wav",
+            "audio/ogg",    // .ogg
+            "audio/webm",   // .webm
+            "audio/mp4",    // .m4a
+            "audio/x-aac",  // .aac
+            "audio/flac"    // .flac
+    );
 
     @Value("${cloud.folder-image}")
     private String folderImage;
