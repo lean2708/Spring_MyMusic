@@ -17,6 +17,7 @@ public class SongRequest {
      String name;
      String description;
     String imageURL;
+    String fileSongURL;
     double duration;
     long listener;
 
