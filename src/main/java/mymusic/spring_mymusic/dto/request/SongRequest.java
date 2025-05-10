@@ -1,6 +1,7 @@
 package mymusic.spring_mymusic.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,8 +22,7 @@ public class SongRequest {
     double duration;
     long listener;
 
-    Long album;
-
+    @NotEmpty(message = "artists không được để trống")
     Set<Long> artists;
 
     Long genre;

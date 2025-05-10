@@ -48,8 +48,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ArtistService {
     private final ArtistRepository artistRepository;
-    private final AlbumRepository albumRepository;
-    private final SongRepository songRepository;
     private final SongMapper songMapper;
     private final AlbumMapper albumMapper;
     private final ArtistMapper artistMapper;
@@ -64,70 +62,25 @@ public class ArtistService {
        }
        Artist artist = artistMapper.toArtist(request);
 
-       // Album
-       if(request.getAlbums() != null && !request.getAlbums().isEmpty()){
-           List<Album> albumList = albumRepository
-                   .findAllByIdIn(request.getAlbums());
-           artist.setAlbums(new HashSet<>(albumList));
-           albumList.forEach(album -> album.getArtists().add(artist));
-       }
-       else{
-           artist.setAlbums(new HashSet<>());
-       }
-
-       // Song
-        if(request.getSongs() != null && !request.getSongs().isEmpty()){
-            List<Song> songList = songRepository.findAllByIdIn(request.getSongs());
-            artist.setSongs(new HashSet<>(songList));
-            songList.forEach(song -> song.getArtists().add(artist));
-        }
-        else {
-            artist.setSongs(new HashSet<>());
-        }
-
         artist.setFollower(artist.getFollower() + 1);
 
        return convertArtistToResponse(artistRepository.save(artist));
     }
+
     public ArtistResponse fetchById(long id){
         Artist artist = artistRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ARTIST_NOT_EXISTED));
 
         artist.setFollower(artist.getFollower() + 1);
 
-        return convertArtistToResponse(artistRepository.save(artist));
+        return convertArtistToResponse(artist);
     }
-
-
-
 
     public ArtistResponse update(long id, ArtistRequest request) {
         Artist artistDB = artistRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ARTIST_NOT_EXISTED));
+
         Artist artist = artistMapper.update(artistDB,request);
-
-        Set<Artist> artistSet = new HashSet<>();
-        artistSet.add(artist);
-
-        // Album
-        if(request.getAlbums() != null && !request.getAlbums().isEmpty()){
-            List<Album> albumList = albumRepository.findAllByIdIn(request.getAlbums());
-            artist.setAlbums(new HashSet<>(albumList));
-            albumList.forEach(album -> album.getArtists().add(artist));
-        }
-        else{
-            artist.setAlbums(new HashSet<>());
-        }
-
-        // Song
-        if(request.getSongs() != null && !request.getSongs().isEmpty()){
-            List<Song> songList = songRepository.findAllByIdIn(request.getSongs());
-            artist.setSongs(new HashSet<>(songList));
-            songList.forEach(song -> song.getArtists().add(artist));
-        }
-        else {
-            artist.setSongs(new HashSet<>());
-        }
 
         artist.setFollower(artist.getFollower() + 1);
 

@@ -44,7 +44,6 @@ import java.util.regex.Pattern;
 @Service
 public class SongService {
     private final SongRepository songRepository;
-    private final AlbumRepository albumRepository;
     private final ArtistRepository artistRepository;
     private final GenreRepository genreRepository;
     private final ArtistMapper artistMapper;
@@ -61,20 +60,6 @@ public class SongService {
         }
        Song song = songMapper.toSong(request);
 
-        Set<Song> songSet = new HashSet<>();
-        songSet.add(song);
-
-        // Album
-        if(request.getAlbum() != null){
-           Album album  = albumRepository.findById(request.getAlbum())
-                   .orElseThrow(() -> new AppException(ErrorCode.ALBUM_NOT_EXISTED));
-           if(album != null){
-               song.setAlbum(album);
-               album.setSongs(songSet);
-               album.setTotalTracks(album.getTotalTracks() + 1);
-               album.setTotalHours(album.getTotalHours() + song.getDuration());
-           }
-        }
         // Artist
         if(request.getArtists() != null && !request.getArtists().isEmpty()){
             List<Artist> artistList = artistRepository
@@ -114,18 +99,6 @@ public class SongService {
         }
 
         Song song = songMapper.update(songDB, request);
-        Set<Song> songSet = new HashSet<>();
-        songSet.add(song);
-        // Album
-        if(request.getAlbum() != null){
-            Album album  = albumRepository.findById(request.getAlbum())
-                    .orElseThrow(() -> new AppException(ErrorCode.ALBUM_NOT_EXISTED));
-            if(album != null){
-                song.setAlbum(album);
-                album.setSongs(songSet);
-                album.setTotalHours(album.getTotalHours() + song.getDuration()/3600);
-            }
-        }
 
         // Artist
         if(request.getArtists() != null && !request.getArtists().isEmpty()){

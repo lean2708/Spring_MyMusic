@@ -17,7 +17,4 @@ public class ArtistRequest {
     long follower;
     String imageURL;
 
-    Set<Long> songs;
-
-    Set<Long> albums;
 }
