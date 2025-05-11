@@ -1,5 +1,6 @@
 package mymusic.spring_mymusic.configuration;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -20,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -29,12 +31,18 @@ public class SecurityConfig {
             "/v1/auth/forgot-password", "/v1/auth/verify-code", "/v1/auth/change-password",
             "/v1/auth/introspect", "/v1/auth/logout",
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-            "/v1/payment/vn-pay-callback"
+            "/v1/payment/vn-pay-callback",
+            "/v1/search-by-priority"
     };
 
-    public SecurityConfig(CustomJwtDecoder customJwtDecoder) {
-        this.customJwtDecoder = customJwtDecoder;
-    }
+    private final String[] PUBLIC_GET_ENDPOINTS = {
+            "/v1/albums", "/v1/albums/search",
+            "/v1/artists", "/v1/artists/search",
+            "/v1/genres", "/v1/genres/*/songs",
+            "/v1/playlists", "/v1/playlists/search",
+            "/v1/songs", "/v1/songs/search"
+    };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -44,6 +52,7 @@ public class SecurityConfig {
 
         httpSecurity.authorizeHttpRequests(request->
                 request.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
         );
 
