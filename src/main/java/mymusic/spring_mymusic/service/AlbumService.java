@@ -66,16 +66,16 @@ public class AlbumService {
        Album album = albumMapper.toAlbum(request);
 
        // Artist
-        if (!CollectionUtils.isEmpty(request.getArtists())) {
-            List<Artist> artistList = artistRepository.findAllByIdIn(request.getArtists());
+        if (!CollectionUtils.isEmpty(request.getArtistIds())) {
+            List<Artist> artistList = artistRepository.findAllByIdIn(request.getArtistIds());
             album.setArtists(new HashSet<>(artistList));
         }else{
             album.setArtists(new HashSet<>());
         }
 
         // Song
-        if (!CollectionUtils.isEmpty(request.getSongs())) {
-            List<Song> songList = songRepository.findAllByIdIn(request.getSongs());
+        if (!CollectionUtils.isEmpty(request.getSongIds())) {
+            List<Song> songList = songRepository.findAllByIdIn(request.getSongIds());
             if(!songList.isEmpty()){
                 album.setSongs(new HashSet<>(songList));
                 songList.forEach(song -> song.setAlbum(album));
@@ -104,14 +104,14 @@ public class AlbumService {
         Album album = albumMapper.update(albumDB,request);
 
         // Artist
-        if (!CollectionUtils.isEmpty(request.getArtists())) {
-            List<Artist> artistList = artistRepository.findAllByIdIn(request.getArtists());
+        if (!CollectionUtils.isEmpty(request.getArtistIds())) {
+            List<Artist> artistList = artistRepository.findAllByIdIn(request.getArtistIds());
             album.setArtists(new HashSet<>(artistList));
         }
 
         // Song
-        if (request.getSongs() != null && !request.getSongs().isEmpty()) {
-            List<Song> songList = songRepository.findAllByIdIn(request.getSongs());
+        if (request.getSongIds() != null && !request.getSongIds().isEmpty()) {
+            List<Song> songList = songRepository.findAllByIdIn(request.getSongIds());
 
             Set<Song> albumSongs = album.getSongs();
             albumSongs.addAll(songList);

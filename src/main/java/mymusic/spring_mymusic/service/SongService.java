@@ -61,17 +61,17 @@ public class SongService {
        Song song = songMapper.toSong(request);
 
         // Artist
-        if(request.getArtists() != null && !request.getArtists().isEmpty()){
+        if(request.getArtistIds() != null && !request.getArtistIds().isEmpty()){
             List<Artist> artistList = artistRepository
-                    .findAllByIdIn(request.getArtists());
+                    .findAllByIdIn(request.getArtistIds());
                 song.setArtists(new HashSet<>(artistList));
         }else{
             song.setArtists(new HashSet<>());
         }
 
         // Genre
-        if(request.getGenre() != null){
-            Genre genre = genreRepository.findById(request.getGenre())
+        if(request.getGenreId() != null){
+            Genre genre = genreRepository.findById(request.getGenreId())
                     .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_EXISTED));
             song.setGenre(genre);
         }
@@ -101,16 +101,16 @@ public class SongService {
         Song song = songMapper.update(songDB, request);
 
         // Artist
-        if(request.getArtists() != null && !request.getArtists().isEmpty()){
-            List<Artist> artistList = artistRepository.findAllByIdIn(request.getArtists());
+        if(request.getArtistIds() != null && !request.getArtistIds().isEmpty()){
+            List<Artist> artistList = artistRepository.findAllByIdIn(request.getArtistIds());
             song.setArtists(new HashSet<>(artistList));
         }else{
             song.setArtists(new HashSet<>());
         }
 
         // Genre
-        if(request.getGenre() != null){
-            Genre genre = genreRepository.findById(request.getGenre())
+        if(request.getGenreId() != null){
+            Genre genre = genreRepository.findById(request.getGenreId())
                     .orElseThrow(() -> new AppException(ErrorCode.GENRE_NOT_EXISTED));
             song.setGenre(genre);
         }

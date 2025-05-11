@@ -23,8 +23,8 @@ public class SongRequest {
     long listener;
 
     @NotEmpty(message = "artists không được để trống")
-    Set<Long> artists;
+    Set<Long> artistIds;
 
-    Long genre;
+    Long genreId;
 
 }

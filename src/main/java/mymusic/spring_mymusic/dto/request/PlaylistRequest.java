@@ -21,5 +21,5 @@ public class PlaylistRequest {
     long listener;
 
     @NotEmpty(message = "songs không được để trống")
-    Set<Long> songs;
+    Set<Long> songIds;
 }

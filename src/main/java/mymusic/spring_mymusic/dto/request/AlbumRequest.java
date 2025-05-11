@@ -19,9 +19,9 @@ public class AlbumRequest {
     long follower;
 
     @NotEmpty(message = "artists không được để trống")
-    Set<Long> artists;
+    Set<Long> artistIds;
 
     @NotEmpty(message = "songs không được để trống")
-    Set<Long> songs;
+    Set<Long> songIds;
 
 }

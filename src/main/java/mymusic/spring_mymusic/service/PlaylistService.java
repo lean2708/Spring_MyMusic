@@ -52,8 +52,8 @@ public class PlaylistService {
         Playlist playlist = playlistMapper.toPlaylist(request);
 
         // Songs
-        if(request.getSongs() != null && !request.getSongs().isEmpty()){
-            List<Song> songList = songRepository.findAllByIdIn(request.getSongs());
+        if(request.getSongIds() != null && !request.getSongIds().isEmpty()){
+            List<Song> songList = songRepository.findAllByIdIn(request.getSongIds());
             playlist.setSongs(new HashSet<>(songList));
             playlist.setTotalTracks(songList.size());
             for(Song song : songList){
@@ -100,8 +100,8 @@ public class PlaylistService {
         Playlist playlist = playlistMapper.update(playlistDB,request);
 
         // Songs
-        if(request.getSongs() != null && !request.getSongs().isEmpty()){
-            List<Song> songList = songRepository.findAllByIdIn(request.getSongs());
+        if(request.getSongIds() != null && !request.getSongIds().isEmpty()){
+            List<Song> songList = songRepository.findAllByIdIn(request.getSongIds());
             Set<Song> songSet = playlist.getSongs();
             songSet.addAll(songList);
             playlist.setSongs(songSet);
