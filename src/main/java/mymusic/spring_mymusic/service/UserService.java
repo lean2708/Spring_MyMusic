@@ -159,16 +159,26 @@ public class UserService {
         return playlistService.convertPlaylistResponse(playlist);
     }
 
-    public List<PlaylistResponse> fetchSavedPlaylists(){
+    public PageResponse<PlaylistResponse> fetchSavedPlaylists(int pageNo, int pageSize, String sortBy){
+        pageNo = pageNo - 1;
+
+        Pageable pageable = pageableService.createPageable(pageNo, pageSize, sortBy, Playlist.class);
+
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
 
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        List<Playlist> savedList = playlistRepository.findAllByIdIn(user.getSavedPlaylistId());
+        Page<Playlist> playlistPage = playlistRepository.findAllByIdIn(user.getSavedPlaylistId(), pageable);
 
-        return playlistService.convertListPlaylistResponse(savedList);
+        return PageResponse.<PlaylistResponse>builder()
+                .page(playlistPage.getNumber() + 1)
+                .size(playlistPage.getSize())
+                .totalPages(playlistPage.getTotalPages())
+                .totalItems(playlistPage.getTotalElements())
+                .items(playlistService.convertListPlaylistResponse(playlistPage.toList()))
+                .build();
     }
 
     public UserResponse convertUserResponse(User user){

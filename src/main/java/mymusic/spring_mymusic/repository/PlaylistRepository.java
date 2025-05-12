@@ -1,5 +1,7 @@
 package mymusic.spring_mymusic.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import mymusic.spring_mymusic.entity.Artist;
 import mymusic.spring_mymusic.entity.Playlist;
@@ -16,5 +18,7 @@ public interface PlaylistRepository extends JpaRepository<Playlist,Long>, JpaSpe
 
 
     List<Playlist> findAllByIdIn(List<Long> listId);
+
+    Page<Playlist> findAllByIdIn(List<Long> ids, Pageable pageable);
 
 }
