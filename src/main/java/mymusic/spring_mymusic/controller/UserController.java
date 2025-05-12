@@ -85,10 +85,13 @@ public class UserController {
                 .build();
     }
     @GetMapping("/users/saved-playlists")
-    public ApiResponse<List<PlaylistResponse>> fetchSavedPlaylists(){
-        return ApiResponse.<List<PlaylistResponse>>builder()
+    public ApiResponse<PageResponse<PlaylistResponse>> fetchSavedPlaylists(@Min(value = 1, message = "pageNo phải lớn hơn 0")
+                                                                       @RequestParam(defaultValue = "1") int pageNo,
+                                                                   @RequestParam(defaultValue = "10") int pageSize,
+                                                                   @RequestParam(required = false) String sortBy){
+        return ApiResponse.<PageResponse<PlaylistResponse>>builder()
                 .code(HttpStatus.OK.value())
-                .result(userService.fetchSavedPlaylists())
+                .result(userService.fetchSavedPlaylists(pageNo, pageSize, sortBy))
                 .message("Fetch Playlist Save with User")
                 .build();
     }
