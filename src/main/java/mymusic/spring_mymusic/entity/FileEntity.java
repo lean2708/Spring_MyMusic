@@ -21,4 +21,5 @@ public class FileEntity {
     String fileName;
     String url;
     String type;
+    Double  duration;
 }

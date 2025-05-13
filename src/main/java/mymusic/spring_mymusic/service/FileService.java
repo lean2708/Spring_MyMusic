@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -79,15 +82,22 @@ public class FileService {
 
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), options);
 
+        Double duration = null;
+        if (type == FileType.VIDEO && uploadResult.containsKey("duration")) {
+            duration = ((Number) uploadResult.get("duration")).doubleValue();
+        }
+
         FileEntity fileEntity = FileEntity.builder()
                 .id(uploadResult.get("public_id").toString())
                 .fileName(file.getOriginalFilename())
                 .type(type.name())
                 .url(uploadResult.get("url").toString())
+                .duration(duration)
                 .build();
 
         return fileRepository.save(fileEntity);
     }
+
 
     private String determineUploadFolder(MultipartFile file, FileType type) throws FileException {
         switch (type){
