@@ -11,7 +11,6 @@ import java.util.Set;
 @Builder
 public class GenreResponse {
     long id;
-    String keyGenre;
     String name;
 
 }

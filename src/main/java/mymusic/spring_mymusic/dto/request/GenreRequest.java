@@ -11,7 +11,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class GenreRequest {
-    String keyGenre;
     @NotBlank(message = "Name không được để trống")
     String name;
 
