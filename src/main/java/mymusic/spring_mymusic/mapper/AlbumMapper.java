@@ -4,11 +4,9 @@ import mymusic.spring_mymusic.dto.basic.AlbumBasic;
 import mymusic.spring_mymusic.dto.request.AlbumRequest;
 import mymusic.spring_mymusic.dto.response.AlbumResponse;
 import mymusic.spring_mymusic.entity.Album;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface AlbumMapper {
     @Mapping(target = "artists", ignore = true)
     @Mapping(target = "songs", ignore = true)
@@ -23,5 +21,6 @@ public interface AlbumMapper {
 
     @Mapping(target = "artists", ignore = true)
     @Mapping(target = "songs", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Album update(@MappingTarget Album  album, AlbumRequest request);
 }

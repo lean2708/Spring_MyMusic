@@ -5,11 +5,9 @@ import mymusic.spring_mymusic.dto.request.PlaylistRequest;
 import mymusic.spring_mymusic.dto.response.PlaylistResponse;
 import mymusic.spring_mymusic.entity.Playlist;
 import mymusic.spring_mymusic.entity.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface PlaylistMapper {
 
     @Mapping(target = "songs", ignore = true)
@@ -20,6 +18,7 @@ public interface PlaylistMapper {
 
     PlaylistBasic toPlaylistBasic(Playlist playlist);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "songs", ignore = true)
     Playlist update(@MappingTarget Playlist playlist, PlaylistRequest request);
 

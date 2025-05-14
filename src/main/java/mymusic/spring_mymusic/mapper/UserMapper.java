@@ -8,9 +8,10 @@ import mymusic.spring_mymusic.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValueCheckStrategy;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdPlaylists", ignore = true)
