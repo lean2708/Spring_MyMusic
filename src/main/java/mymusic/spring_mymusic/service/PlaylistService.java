@@ -131,9 +131,9 @@ public class PlaylistService {
         Playlist playlistDB = playlistRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PLAYLIST_NOT_EXISTED));
 
-        List<User> users = userRepository.findAllByCreatedPlaylists_Id(id);
+        List<User> users = userRepository.findAllBySavedPlaylists_Id(id);
         for (User user : users) {
-            user.getCreatedPlaylists().remove(playlistDB);
+            user.getSavedPlaylists().remove(playlistDB);
         }
         userRepository.saveAll(users);
 
