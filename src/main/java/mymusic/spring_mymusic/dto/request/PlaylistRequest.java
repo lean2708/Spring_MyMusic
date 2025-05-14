@@ -13,7 +13,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class PlaylistRequest {
-    @NotBlank(message = "Title không được để trống")
     String title;
     String description;
     String imageURL;
