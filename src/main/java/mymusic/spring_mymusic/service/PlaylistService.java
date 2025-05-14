@@ -130,6 +130,17 @@ public class PlaylistService {
     public void delete(long id){
         Playlist playlistDB = playlistRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PLAYLIST_NOT_EXISTED));
+
+        List<User> users = userRepository.findAllByCreatedPlaylists_Id(id);
+        for (User user : users) {
+            user.getCreatedPlaylists().remove(playlistDB);
+        }
+        userRepository.saveAll(users);
+
+
+        playlistDB.getSongs().clear();
+        playlistRepository.save(playlistDB);
+
         playlistRepository.delete(playlistDB);
     }
 
