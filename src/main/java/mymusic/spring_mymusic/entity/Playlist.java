@@ -27,7 +27,7 @@ public class Playlist {
      String description;
     int totalTracks;
     long follower;
-    String creator;
+
     String imageURL;
     long listener;
     double totalHours;
@@ -36,6 +36,10 @@ public class Playlist {
     LocalDate createdAt;
     @UpdateTimestamp
     LocalDate updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    User creator;
 
     @Builder.Default
     @ManyToMany

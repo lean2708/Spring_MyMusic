@@ -50,8 +50,9 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(1034, "Refresh token không hợp lệ hoặc đã hết hạn", HttpStatus.UNAUTHORIZED),
     PASSWORD_MISMATCH(1056, "Mật khẩu nhập lại không khớp", HttpStatus.BAD_REQUEST),
     INVALID_OLD_PASSWORD(1024, "Mật khẩu cũ không chính xác", HttpStatus.BAD_REQUEST),
-    FORGOT_PASSWORD_TOKEN_NOT_FOUND(1025, "Token đặt lại mật khẩu không tồn tại hoặc đã hết hạn", HttpStatus.NOT_FOUND)
-    ;
+    FORGOT_PASSWORD_TOKEN_NOT_FOUND(1025, "Token đặt lại mật khẩu không tồn tại hoặc đã hết hạn", HttpStatus.NOT_FOUND),
+    PLAYLIST_ALREADY_SAVED(1012, "Playlist đã được lưu bởi người dùng này", HttpStatus.BAD_REQUEST),
+            ;
 
     private final int code;
     private final String message;

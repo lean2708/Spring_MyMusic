@@ -68,7 +68,7 @@ public class PlaylistService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        playlist.setCreator(user.getName());
+        playlist.setCreator(user);
 
         Set<Playlist> playlistSet = new HashSet<>();
         playlistSet.add(playlist);
@@ -118,7 +118,7 @@ public class PlaylistService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        playlist.setCreator(user.getName());
+        playlist.setCreator(user);
 
         Set<Playlist> playlistSet = Set.of(playlist);
         user.setCreatedPlaylists(playlistSet);

@@ -61,7 +61,7 @@ public class UserService {
 
             for(Playlist playlist : playlistList){
                 playlist.setListener(playlist.getListener() + 1);
-                playlist.setCreator(user.getName());
+                playlist.setCreator(user);
             }
            user.setCreatedPlaylists(new HashSet<>(playlistList));
         }
@@ -115,7 +115,7 @@ public class UserService {
 
             for(Playlist playlist : playlistList){
                 playlist.setListener(playlist.getListener() + 1);
-                playlist.setCreator(user.getName());
+                playlist.setCreator(user);
             }
             Set<Playlist> playlistSet = userDB.getCreatedPlaylists();
             playlistSet.addAll(playlistList);
@@ -150,10 +150,11 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        List<Long> idList = user.getSavedPlaylistId();
-        idList.add(playlist.getId());
-        user.setSavedPlaylistId(idList);
+        if (user.getSavedPlaylists().contains(playlist)) {
+            throw new AppException(ErrorCode.PLAYLIST_ALREADY_SAVED);
+        }
 
+        user.getSavedPlaylists().add(playlist);
         userRepository.save(user);
 
         return playlistService.convertPlaylistResponse(playlist);
@@ -170,7 +171,9 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Page<Playlist> playlistPage = playlistRepository.findAllByIdIn(user.getSavedPlaylistId(), pageable);
+        List<Long> playlistSet = user.getSavedPlaylists().stream().map(Playlist::getId).toList();
+
+        Page<Playlist> playlistPage = playlistRepository.findAllByIdIn(playlistSet, pageable);
 
         return PageResponse.<PlaylistResponse>builder()
                 .page(playlistPage.getNumber() + 1)
@@ -210,11 +213,14 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if (!user.getSavedPlaylistId().contains(playlistId)) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new AppException(ErrorCode.PLAYLIST_NOT_EXISTED));
+
+        if (!user.getSavedPlaylists().contains(playlist)) {
             throw new AppException(ErrorCode.PLAYLIST_NOT_IN_USER);
         }
 
-        user.getSavedPlaylistId().remove(playlistId);
+        user.getSavedPlaylists().remove(playlist);
         userRepository.save(user);
     }
 

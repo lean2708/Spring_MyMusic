@@ -43,19 +43,17 @@ public class User {
     @ManyToMany
     Set<Role> roles = new HashSet<>();
 
-    @Builder.Default
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_playlist",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "playlist_id")
-    )
+    @OneToMany(mappedBy = "creator")
     Set<Playlist> createdPlaylists = new HashSet<>();
 
     @Builder.Default
-    @ElementCollection
-    @Column(name = "playlist_id")
-    List<Long> savedPlaylistId = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "user_saved_playlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "playlist_id")
+    )
+    Set<Playlist> savedPlaylists = new HashSet<>();
 
     boolean premiumStatus;
     LocalDate premiumExpiryDate;
