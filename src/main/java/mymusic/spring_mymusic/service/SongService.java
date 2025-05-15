@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 import jakarta.validation.constraints.Min;
 import mymusic.spring_mymusic.dto.response.PlaylistResponse;
 import mymusic.spring_mymusic.dto.response.RoleResponse;
+import mymusic.spring_mymusic.repository.*;
 import mymusic.spring_mymusic.repository.criteria.JobSearchCriteriaQueryConsumer;
 import mymusic.spring_mymusic.repository.criteria.SearchCriteria;
 import org.springframework.data.domain.Page;
@@ -27,10 +28,6 @@ import mymusic.spring_mymusic.exception.AppException;
 import mymusic.spring_mymusic.mapper.AlbumMapper;
 import mymusic.spring_mymusic.mapper.ArtistMapper;
 import mymusic.spring_mymusic.mapper.SongMapper;
-import mymusic.spring_mymusic.repository.AlbumRepository;
-import mymusic.spring_mymusic.repository.ArtistRepository;
-import mymusic.spring_mymusic.repository.GenreRepository;
-import mymusic.spring_mymusic.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import mymusic.spring_mymusic.specification.SongSpecification;
@@ -50,6 +47,7 @@ public class SongService {
     private final PageableService pageableService;
     private final AlbumMapper albumMapper;
     private final SongMapper songMapper;
+    private final PlaylistRepository playlistRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -124,6 +122,13 @@ public class SongService {
     public void delete(long id){
         Song songDB = songRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SONG_NOT_EXISTED));
+
+        for (Playlist playlist : songDB.getPlaylists()) {
+            playlist.getSongs().remove(songDB);
+        }
+        playlistRepository.saveAll(songDB.getPlaylists());
+
+        songDB.getPlaylists().clear();
 
         songRepository.delete(songDB);
     }

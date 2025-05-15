@@ -102,14 +102,16 @@ public class PlaylistService {
         // Songs
         if(request.getSongIds() != null && !request.getSongIds().isEmpty()){
             List<Song> songList = songRepository.findAllByIdIn(request.getSongIds());
+
             Set<Song> songSet = playlist.getSongs();
             songSet.addAll(songList);
+
             playlist.setSongs(songSet);
+
+            double totalHours = songList.stream().mapToDouble(Song::getDuration).sum();
+            playlist.setTotalHours(playlist.getTotalHours() + totalHours);
+
             playlist.setTotalTracks(songList.size());
-            for(Song song : songList){
-                playlist.setTotalHours(playlist.getTotalHours() + song.getDuration());
-                song.setPlaylists(Set.of(playlist));
-            }
         }
         playlist.setFollower(playlist.getFollower() + 1);
 
@@ -120,8 +122,7 @@ public class PlaylistService {
 
         playlist.setCreator(user);
 
-        Set<Playlist> playlistSet = Set.of(playlist);
-        user.setCreatedPlaylists(playlistSet);
+        user.getCreatedPlaylists().add(playlist);
         userRepository.save(user);
 
         return convertPlaylistResponse(playlistRepository.save(playlist));
